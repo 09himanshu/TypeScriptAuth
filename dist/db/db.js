@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DB = void 0;
 const mongodb_1 = require("mongodb");
 class DB {
     constructor(uri, db_name) {
@@ -42,28 +43,158 @@ class DB {
     get_db_name() {
         return this.client.db(this.db_name);
     }
-    find(collection, filter, projection) {
-        return __awaiter(this, void 0, void 0, function* () {
-            var _a;
+    find(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ collection, filter, project = {}, optionals = {} }) {
             try {
-                let skip = 0;
-                let limit = 10;
-                let project = {};
-                if (filter.skip) {
-                    skip = Number(filter.skip);
-                }
-                if (filter.limit) {
-                    limit = Number(filter.limit);
-                }
-                if (Object.keys(projection).length) {
-                    project = { projection };
-                }
-                return (_a = this.get_db_name()) === null || _a === void 0 ? void 0 : _a.collection(collection).find(filter).skip(skip).limit(limit).project(project).toArray();
+                if (!collection || typeof collection !== 'string')
+                    return [];
+                if (filter && typeof filter._id == 'string')
+                    filter._id = new mongodb_1.ObjectId(filter._id);
+                const { limit = 100, skip = 0, sort = {} } = optionals;
+                return yield this.get_db_name()
+                    .collection(collection)
+                    .find(filter)
+                    .project(project)
+                    .skip(skip)
+                    .limit(limit)
+                    .sort(sort)
+                    .toArray();
             }
             catch (err) {
                 console.log(err);
+                return [];
+            }
+        });
+    }
+    findOne(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ collection, filter, project = {} }) {
+            try {
+                if (!collection || typeof collection !== 'string')
+                    return null;
+                if (filter && typeof filter._id == 'string')
+                    filter._id = new mongodb_1.ObjectId(filter._id);
+                return yield this.get_db_name()
+                    .collection(collection)
+                    .findOne(filter, project);
+            }
+            catch (err) {
+                console.log(err);
+                return null;
+            }
+        });
+    }
+    insertOne(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ collection, document }) {
+            try {
+                if (!collection || typeof collection !== 'string')
+                    return null;
+                return yield this.get_db_name()
+                    .collection(collection)
+                    .insertOne(document);
+            }
+            catch (err) {
+                console.log(err);
+                return null;
+            }
+        });
+    }
+    insertMany(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ collection, document }) {
+            try {
+                if (!collection || typeof collection !== 'string')
+                    return null;
+                return yield this.get_db_name()
+                    .collection(collection)
+                    .insertMany(document);
+            }
+            catch (err) {
+                console.log(err);
+                return null;
+            }
+        });
+    }
+    updateOne(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ collection, filter, update }) {
+            try {
+                if (!collection || typeof collection !== 'string')
+                    return null;
+                if (filter && typeof filter._id == 'string')
+                    filter._id = new mongodb_1.ObjectId(filter._id);
+                return yield this.get_db_name()
+                    .collection(collection)
+                    .updateOne(filter, update);
+            }
+            catch (err) {
+                console.log(err);
+                return null;
+            }
+        });
+    }
+    updateMany(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ collection, filter, update }) {
+            try {
+                if (!collection || typeof collection !== 'string')
+                    return null;
+                if (filter && typeof filter._id == 'string')
+                    filter._id = new mongodb_1.ObjectId(filter._id);
+                return yield this.get_db_name()
+                    .collection(collection)
+                    .updateMany(filter, update);
+            }
+            catch (err) {
+                console.log(err);
+                return null;
+            }
+        });
+    }
+    deleteOne(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ collection, filter }) {
+            try {
+                if (!collection || typeof collection !== 'string')
+                    return null;
+                if (filter && typeof filter._id == 'string')
+                    filter._id = new mongodb_1.ObjectId(filter._id);
+                return yield this.get_db_name()
+                    .collection(collection)
+                    .deleteOne(filter);
+            }
+            catch (err) {
+                console.log(err);
+                return null;
+            }
+        });
+    }
+    deleteMany(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ collection, filter }) {
+            try {
+                if (!collection || typeof collection !== 'string')
+                    return null;
+                if (filter && typeof filter._id == 'string')
+                    filter._id = new mongodb_1.ObjectId(filter._id);
+                return yield this.get_db_name()
+                    .collection(collection)
+                    .deleteMany(filter);
+            }
+            catch (err) {
+                console.log(err);
+                return null;
+            }
+        });
+    }
+    aggegrate(_a) {
+        return __awaiter(this, arguments, void 0, function* ({ collection, document }) {
+            try {
+                if (!collection || typeof collection !== 'string')
+                    return [];
+                return yield this.get_db_name()
+                    .aggregate(document).toArray();
+            }
+            catch (err) {
+                console.log(err);
+                return [];
             }
         });
     }
 }
+exports.DB = DB;
 //# sourceMappingURL=db.js.map
