@@ -68,7 +68,7 @@ class DB {
     return DB.instance
   }
 
-  async connection(): Promise<void> {
+  private async connection(): Promise<void> {
     try {
       await this.client.connect();
       console.log(`MongoDB connected successfully`);
@@ -77,7 +77,7 @@ class DB {
     }
   }
 
-  get_db_name(): Db {
+  private get_db_name(): Db {
     return this.client.db(this.db_name);
   }
 
