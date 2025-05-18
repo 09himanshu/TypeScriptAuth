@@ -3,16 +3,13 @@ import path from "path";
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
-function getEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Missing required env variable: ${name}`);
-  }
-  return value;
-}
-
-export const ENV = {
-  PORT: getEnv("PORT"),
-  URI: getEnv("URI"),
-  DB_NAME: getEnv("DB_NAME"),
+export default {
+  PORT: Number(process.env.PORT),
+  URI: process.env.URI,
+  DB_NAME: process.env.DB_NAME,
+  SMTP_HOST: process.env.SMTP_HOST,
+  SMTP_PORT: Number(process.env.SMTP_PORT),
+  SMTP_USER: process.env.SMTP_USER,
+  SMTP_PASS: process.env.SMTP_PASS,
+  SMTP_FROM: process.env.SMTP_FROM
 };

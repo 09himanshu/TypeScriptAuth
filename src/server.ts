@@ -1,9 +1,11 @@
 import express from "express";
-import http from 'http';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
+
+import env from './config/env.config'
+import mailRoute from './routes/sendMail.routes'
 
 function start(app:any,PORT:number) {
   app.listen(PORT, () => {
@@ -13,8 +15,7 @@ function start(app:any,PORT:number) {
 
 function init() {
   const app = express();
-  const PORT: number = Number(process.env.PORT) || 8080 
-  
+  const PORT: number = Number(env.PORT)
   
   app.use(compression());
   app.use(bodyParser.json());
@@ -22,6 +23,8 @@ function init() {
   app.use(cors({
     credentials: true
   }))
+
+  app.use(mailRoute)
 
   start(app,PORT)
 }

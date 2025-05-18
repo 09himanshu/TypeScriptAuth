@@ -1,7 +1,7 @@
-import {ENV} from '../config/env.config'
+import env from '../config/env.config'
 import {DB} from '../db/db'
 
-
-const dbService = new DB(ENV.URI, ENV.DB_NAME)
+console.log('=====ENV',env)
+const dbService = new DB(env.URI, env.DB_NAME)
 
 export default dbService
